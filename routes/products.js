@@ -1,18 +1,21 @@
 const express = require('express');
 const router = express.Router();
 
+// GET to /products
 router.get('/', (req, res, next) => {
     res.status(200).json({
         message: 'Handling GET requests to /products'
     });
 });
 
+// POST to /products
 router.post('/', (req, res, next) => {
-    res.status(200).json({
+    res.status(201).json({
         message: 'Handling POST requests to /products'
     });
 });
 
+// GET to /products/:productId
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
     res.status(200).json({
@@ -21,6 +24,7 @@ router.get('/:productId', (req, res, next) => {
     });
 });
 
+// PATCH to /products/:productId
 router.patch('/:productId', (req, res, next) => {
     const id = req.params.productId;
     res.status(200).json({
@@ -29,6 +33,7 @@ router.patch('/:productId', (req, res, next) => {
     });
 });
 
+// DELETE to /products/:productId
 router.delete('/:productId', (req, res, next) => {
     const id = req.params.productId;
     res.status(200).json({
@@ -37,4 +42,5 @@ router.delete('/:productId', (req, res, next) => {
     });
 });
 
+// export router
 module.exports = router;
