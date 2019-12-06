@@ -1,10 +1,7 @@
 const express = require('express');
 const app = express();
+const productsRouter = require('./routes/products');
 
-app.use((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello World\n');
-});
+app.use('/products', productsRouter);
 
 module.exports = app;
