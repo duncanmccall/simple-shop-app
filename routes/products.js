@@ -6,13 +6,25 @@ const Product = require('../models/Product');
 // GET to /products
 router.get('/', (req, res, next) => {
     Product.find()
+        .select('name price _id')
         .exec()
         .then(docs => {
-            console.log(docs);
-            res.status(200).json({
-                message: 'Handling GET requests to /products',
-                docs
-            });
+            const response = {
+                count: docs.length,
+                products: docs.map(doc => {
+                    return {
+                        name: doc.name,
+                        price: doc.price,
+                        _id: doc._id,
+                        request: {
+                            type: 'GET',
+                            url: `http://${process.env.HOSTNAME}:${process.env.PORT}/products/${doc._id}`
+                        }
+                    }
+                })
+            }
+            console.log(response);
+            res.status(200).json({ response });
         })
         .catch(error => {
             console.log(error);
@@ -36,10 +48,19 @@ router.post('/', (req, res, next) => {
         .then((result) => {
             console.log(result);
             res.status(201).json({
-                message: 'Handling POST requests to /products',
-                createdProduct: result
+                message: `${result.name} successfully created!`,
+                createdProduct: {
+                    name: result.name,
+                    price: result.price,
+                    _id: result._id,
+                    request: {
+                        type: 'GET',
+                        url: `http://${process.env.HOSTNAME}:${process.env.PORT}/products/${result._id}`
+                    }
+                }
             });
         }).catch((error) => {
+            error.message = 'Failed to create a new product';
             console.log(error);
             res.status(500).json({ error });
         });
@@ -54,21 +75,26 @@ router.get('/:productId', (req, res, next) => {
 
     // find product by id
     Product.findById(id)
+        .select('-__v')
         .exec()
-        .then(doc => {
-            console.log(doc);
-            if (doc) {
+        .then(product => {
+            console.log(product);
+            if (product) {
                 res.status(200).json({
-                    message: 'Handling GET requests to /products/productId',
-                    doc
+                    product
                 });
             } else {
                 res.status(404).json({
-                    message: 'Invalid ID: No product exists with this ID'
+                    message: 'Invalid ID: No product exists with this ID',
+                    request: {
+                        type: 'GET',
+                        url: `http://${process.env.HOSTNAME}:${process.env.PORT}/products`
+                    }
                 });
             }
         })
         .catch(error => {
+            error.message = 'Invalid ID: No product exists with this ID';
             console.log(error);
             res.status(500).json({ error });
         });
@@ -88,15 +114,28 @@ router.patch('/:productId', (req, res, next) => {
     
     // update product
     Product.updateOne({ _id: id }, { $set: updateOps })
+        .select('-__v')
         .exec()
         .then(doc => {
             console.log(doc);
-            res.status(200).json({
-                message: 'Handling PATCH requests to /products/productId',
-                doc
-            });
+            if (doc.nModified === 0) {
+                res.status(404).json({
+                    message: 'Product failed to update',
+                    doc
+                });
+            } else {
+                res.status(200).json({
+                    message: 'Product successfully updated',
+                    request: {
+                        type: 'GET',
+                        url: `http://${process.env.HOSTNAME}:${process.env.PORT}/products/${id}`
+
+                    }
+                });
+            }
         })
         .catch(error => {
+            error.message = 'Server Error: Update operation failed'
             console.log(error);
             res.status(500).json({ error });
         });
@@ -113,13 +152,22 @@ router.delete('/:productId', (req, res, next) => {
     Product.remove({ _id: id })
         .exec()
         .then(result => {
-            console.log(result);
-            res.status(200).json({
-                message: 'Handling DELETE requests to /products/productId',
-                result
-            });
+            if (result.deletedCount === 0) {
+                console.log(result);
+                res.status(404).json({
+                    message: 'Failed to delete product that does not exist',
+                    result
+                });
+            } else {
+                console.log(result);
+                res.status(200).json({
+                    message: `Product with ID: ${id} successfully deleted`,
+                    result
+                });
+            }
         })
         .catch(error => {
+            error.message = 'Server Error: Delete operation failed';
             console.log(error);
             res.status(500).json({ error });
         });
