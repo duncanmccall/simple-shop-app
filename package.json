@@ -1,25 +1,25 @@
 {
-  "name": "simple-shop-app",
-  "version": "1.0.0",
-  "description": "A simple shop app with REST API, built with Node",
-  "main": "index.js",
-  "scripts": {
-    "devStart": "nodemon ./server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [
-    "node",
-    "API"
-  ],
-  "author": "Dunc",
-  "license": "ISC",
-  "dependencies": {
-    "eslint": "^6.7.2",
-    "express": "^4.17.1",
-    "morgan": "^1.9.1"
-  },
-  "devDependencies": {
-    "dotenv": "^8.2.0",
-    "nodemon": "^2.0.1"
-  }
+	"name": "simple-shop-app",
+	"version": "1.0.0",
+	"description": "A simple shop app with REST API, built with Node",
+	"main": "index.js",
+	"scripts": {
+		"start": "nodemon ./server.js",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"keywords": [
+		"node",
+		"API"
+	],
+	"author": "Dunc",
+	"license": "ISC",
+	"dependencies": {
+		"eslint": "^6.7.2",
+		"express": "^4.17.1",
+		"morgan": "^1.9.1"
+	},
+	"devDependencies": {
+		"dotenv": "^8.2.0",
+		"nodemon": "^2.0.1"
+	}
 }
