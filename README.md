@@ -1,4 +1,4 @@
 # Simple Shop App
 
 -   No interface
--   Node
+-   Node, Express, Mongo

@@ -15,7 +15,7 @@ router.get('/', (req, res, next) => {
                     return {
                         name: doc.name,
                         price: doc.price,
-                        _id: doc._id,
+                        productId: doc._id,
                         request: {
                             type: 'GET',
                             url: `http://${process.env.HOSTNAME}:${process.env.PORT}/products/${doc._id}`
@@ -129,7 +129,6 @@ router.patch('/:productId', (req, res, next) => {
                     request: {
                         type: 'GET',
                         url: `http://${process.env.HOSTNAME}:${process.env.PORT}/products/${id}`
-
                     }
                 });
             }
