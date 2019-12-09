@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
 
 const productsRouter = require('./routes/products');
 const ordersRouter = require('./routes/orders');
@@ -29,6 +30,32 @@ app.use((req, res, next) => {
     }
     next();
 });
+
+/*
+    Database
+*/
+
+// check for connection errors
+mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => {
+        console.log("Successfully connected to the database...");
+    })
+    .catch(error => {
+        console.log(`Could not connect to the database. Error: ${error}...`);
+    });
+
+// error handling for disruptions to database connection after initial connection has been made
+mongoose.connection
+    .once('open', () => {
+        console.log("Connection to the database re-established...")
+    })
+    .on('error', error => {
+        console.log(`There is a problem connecting to the database. Error: ${error}...`);
+    });
+    
+/*
+    Routing
+*/
 
 app.use('/products', productsRouter);
 app.use('/orders', ordersRouter);

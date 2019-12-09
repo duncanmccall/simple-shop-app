@@ -16,6 +16,7 @@
 	"dependencies": {
 		"eslint": "^6.7.2",
 		"express": "^4.17.1",
+		"mongoose": "^5.7.14",
 		"morgan": "^1.9.1"
 	},
 	"devDependencies": {
