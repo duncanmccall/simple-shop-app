@@ -10,6 +10,9 @@ const ordersRouter = require('./routes/orders');
 // log requests to terminal
 app.use(morgan('dev'));
 
+// make uploads public
+app.use('/uploads', express.static('uploads'));
+
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
  

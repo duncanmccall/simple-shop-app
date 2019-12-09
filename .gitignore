@@ -12,3 +12,5 @@ variables.env
 .env.test
 
 package-lock.json
+
+uploads
