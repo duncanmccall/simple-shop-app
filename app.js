@@ -35,7 +35,7 @@ app.use((req, res, next) => {
     Database
 */
 
-// check for connection errors
+// establish connection to db, check for connection errors
 mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
         console.log("Successfully connected to the database...");
@@ -44,7 +44,7 @@ mongoose.connect(process.env.DATABASE_URL, { useNewUrlParser: true, useUnifiedTo
         console.log(`Could not connect to the database. Error: ${error}...`);
     });
 
-// error handling for disruptions to database connection after initial connection has been made
+// error handling for disruptions to d connection after initial connection has been made
 mongoose.connection
     .once('open', () => {
         console.log("Connection to the database re-established...")
@@ -52,7 +52,7 @@ mongoose.connection
     .on('error', error => {
         console.log(`There is a problem connecting to the database. Error: ${error}...`);
     });
-    
+
 /*
     Routing
 */

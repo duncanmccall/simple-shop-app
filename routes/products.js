@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const mongoose = require('mongoose');
+const Product = require('../models/Product');
 
 // GET to /products
 router.get('/', (req, res, next) => {
@@ -10,23 +12,47 @@ router.get('/', (req, res, next) => {
 
 // POST to /products
 router.post('/', (req, res, next) => {
-    const product = {
+
+    // create a new product
+    const product = new Product({
+        _id: new mongoose.Types.ObjectId(),
         name: req.body.name,
         price: req.body.price
-    };
+    });
+
+    // save product to database
+    product.save()
+        .then((result) => {
+            console.log(result);
+        }).catch((error) => {
+            console.log(error);
+        });
+
+    // send response to client
     res.status(201).json({
         message: 'Handling POST requests to /products',
-        createdProduct: productpr
+        createdProduct: product
     });
+
 });
 
 // GET to /products/:productId
 router.get('/:productId', (req, res, next) => {
     const id = req.params.productId;
-    res.status(200).json({
-        message: 'Handling GET requests to /products/productId',
-        id: id
-    });
+
+    Product.findById(id)
+        .exec()
+        .then(doc => {
+            console.log(doc);
+            res.status(200).json({
+                message: 'Handling GET requests to /products/productId',
+                doc
+            });
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({ error });
+        });
 });
 
 // PATCH to /products/:productId
