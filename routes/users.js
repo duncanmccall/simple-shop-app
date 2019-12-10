@@ -3,6 +3,7 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 // POST to users/signup
 router.post('/signup', (req, res, next) => {
@@ -52,6 +53,59 @@ router.post('/signup', (req, res, next) => {
         });
 });
 
+// POST to /login
+router.post('/login', (req, res, next) => {
+    User
+        .find({ email: req.body.email })
+        .exec()
+        .then(user => {
+            if (user.length < 1) {
+                console.log(user);
+                return res.status(401).json({
+                    message: 'Authorization failed'
+                });
+            }
+
+            bcrypt.compare(req.body.password, user[0].password, (error, result) => {
+                if (error) {
+                    console.log(error);
+                    return res.status(401).json({
+                        message: 'Authorization failed'
+                    });
+                }
+                if (result) {
+                    const token = jwt.sign(
+                        {
+                            email: user[0].email,
+                            userId: user[0]._id,
+                        },
+                        process.env.JWT_KEY,
+                        {
+                            expiresIn: '1h'
+                        }
+                    );
+                    console.log(result);
+                    return res.status(200).json({
+                        message: 'Authorization successful',
+                        token: token
+                    });
+                }
+                console.log(error);
+                res.status(401).json({
+                    message: 'Authorization failed'
+                });
+            });
+        })
+        .catch(error => {
+            console.log(error);
+            res.status(500).json({
+                error
+            });
+
+        });
+});
+
+// DELETE to /userId
 router.delete('/:uderId', (req, res, next) => {
 
     User
