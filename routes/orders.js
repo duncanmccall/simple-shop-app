@@ -5,8 +5,10 @@ const mongoose = require('mongoose');
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 
+const checkAuth = require('../utilities/check-auth');
+
 // GET to /orders
-router.get('/', (req, res, next) => {
+router.get('/', checkAuth, (req, res, next) => {
     Order.find()
         .select('-__v')
         .populate('product', '_id name price')
@@ -38,7 +40,7 @@ router.get('/', (req, res, next) => {
 });
 
 // POST to /orders
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
     
     // get productId from request params
     const productId = req.body.productId;
@@ -82,7 +84,7 @@ router.post('/', (req, res, next) => {
 });
 
 // GET to /orders/:orderId
-router.get('/:orderId', (req, res, next) => {
+router.get('/:orderId', checkAuth, (req, res, next) => {
     
     // get order id from request params
     const id = req.params.orderId;
@@ -115,7 +117,7 @@ router.get('/:orderId', (req, res, next) => {
 });
 
 // DELETE to /orders/:orderId
-router.delete('/:orderId', (req, res, next) => {
+router.delete('/:orderId', checkAuth, (req, res, next) => {
     
     // get order id from request params
     const id = req.params.orderId;
