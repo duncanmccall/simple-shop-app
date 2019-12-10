@@ -6,6 +6,7 @@ const mongoose = require('mongoose');
 
 const productsRouter = require('./routes/products');
 const ordersRouter = require('./routes/orders');
+const usersRouter = require('./routes/users');
 
 // log requests to terminal
 app.use(morgan('dev'));
@@ -62,6 +63,7 @@ mongoose.connection
 
 app.use('/products', productsRouter);
 app.use('/orders', ordersRouter);
+app.use('/users', usersRouter);
 
 /*
     Error handling
